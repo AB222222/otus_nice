@@ -1,0 +1,72 @@
+Script started on 2020-12-05 18:04:57+03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="140" LINES="55"]
+]0;me@me-HP-260-G3-DM: ~/DZ_ps_20201205[01;32mme@me-HP-260-G3-DM[00m:[01;34m~/DZ_ps_20201205[00m$ cat myscript.sh 
+#!/bin/bash
+
+#First create 2 big enough files:
+dd if=/dev/urandom of=big_file_1 bs=100M count=1 iflag=fullblock
+dd if=/dev/urandom of=big_file_2 bs=100M count=1 iflag=fullblock
+
+
+echo -e "Starting first bzip2 ..."
+date
+bzip2 -9 -k big_file_1 && echo -e "End of first bzip2: " && date & 
+#echo -e "Must run  meanwhile ..."
+echo -e "Starting second bzip2 ..."
+date
+bzip2 -9 -k big_file_2 && echo -e "End of second bzip2: " && date & 
+wait
+echo -e "Finished all 2 processes."
+
+rm -v big_file_1.bz2
+rm -v big_file_2.bz2
+
+
+echo -e "Starting first bzip2 with nice 0 ..."
+date
+nice -n 0 bzip2 -9 -k big_file_1 && echo -e "End of first bzip2 with nice 0: " && date & 
+#echo -e "Must run  meanwhile ..."
+echo -e "Starting second bzip2 with nice +19 ..."
+date
+nice -n 19 bzip2 -9 -k big_file_2 && echo -e "End of second bzip2 with nice +19: " && date & 
+wait
+echo -e "Finished all 2 processes, the second with nice +19."
+
+rm -v big_file_1.bz2
+rm -v big_file_2.bz2
+
+
+
+
+
+]0;me@me-HP-260-G3-DM: ~/DZ_ps_20201205[01;32mme@me-HP-260-G3-DM[00m:[01;34m~/DZ_ps_20201205[00m$ ./myscript.sh 
+1+0 records in
+1+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 3,73406 s, 28,1 MB/s
+1+0 records in
+1+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 3,71178 s, 28,2 MB/s
+Starting first bzip2 ...
+Сб 05 дек 2020 18:05:17 MSK
+Starting second bzip2 ...
+Сб 05 дек 2020 18:05:17 MSK
+End of first bzip2: 
+Сб 05 дек 2020 18:05:37 MSK
+End of second bzip2: 
+Сб 05 дек 2020 18:05:37 MSK
+Finished all 2 processes.
+removed 'big_file_1.bz2'
+removed 'big_file_2.bz2'
+Starting first bzip2 with nice 0 ...
+Сб 05 дек 2020 18:05:37 MSK
+Starting second bzip2 with nice +19 ...
+Сб 05 дек 2020 18:05:37 MSK
+End of second bzip2 with nice +19: 
+Сб 05 дек 2020 18:05:58 MSK
+End of first bzip2 with nice 0: 
+Сб 05 дек 2020 18:05:58 MSK
+Finished all 2 processes, the second with nice +19.
+removed 'big_file_1.bz2'
+removed 'big_file_2.bz2'
+]0;me@me-HP-260-G3-DM: ~/DZ_ps_20201205[01;32mme@me-HP-260-G3-DM[00m:[01;34m~/DZ_ps_20201205[00m$ exit
+
+Script done on 2020-12-05 18:06:00+03:00 [COMMAND_EXIT_CODE="0"]
